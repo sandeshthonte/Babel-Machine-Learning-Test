@@ -1,0 +1,230 @@
+import pandas as pd
+import numpy as np
+
+
+exam_data = {'name': ['Anastasia', 'Dima', 'Katherine', 'James', 'Emily', 'Michael', 'Matthew', 'Laura', 'Kevin', 'Jonas'], 'score': [12.5, 9, 16.5, np.nan, 9, 20, 14.5, np.nan, 8, 19], 'attempts': [1, 3, 2, 3, 2, 3, 1, 1, 2, 1], 'qualify': ['yes', 'no', 'yes', 'no', 'no', 'yes', 'yes', 'no', 'no', 'yes']}
+labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+
+dataFrame = pd.DataFrame(exam_data, labels)
+print(dataFrame)
+
+#b. i.replacing qualify column attributes yes or no with True or False
+dataFrame.loc[(dataFrame.qualify == 'yes'), ('qualify')] = True
+dataFrame.loc[(dataFrame.qualify == 'no'), ('qualify')] = False
+#print(dataFrame)
+
+#printing data frames which are not null
+#dataFrameQualified = dataFrame[dataFrame.score.notnull()]
+#print(dataFrameQualified)
+
+#b. ii.printing data frame in attempts, name, qualify, score column format
+dataFrameModified = dataFrame[['attempts', 'name', 'qualify', 'score']]
+print(dataFrameModified)
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
+from sklearn import metrics 
+
+#a. loading iris dataset from csv file, printing the shape of the data, type of the data and first 20 rows
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+iris_dataset = pd.read_csv('D:\Iris.csv')
+iris = iris_dataset.head(20)
+
+print(iris_dataset.values)
+print(iris_dataset.shape)
+print(iris_dataset.dtypes)
+print(iris)
+
+#b. Print the number of NaN & missing values in the dataset – find the total in the dataset alongside the total in each column in the dataset.
+print(iris_dataset.isnull().sum().sum())
+
+X = iris_dataset.iloc[:, 1:-1].values
+Y = iris_dataset.iloc[:, 5].values
+
+
+#c.Splitting dataset in 80% test dataset, 20% train dataset, fitting dataset into model using the K Nearest Neighbor Algorithm.
+#data,target = iris_dataset.load_iris(return_X_y=True)
+x_train, x_test, y_train , y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
+#print(iris_dataset.info())
+#print(X)
+#print(Y)
+print(x_train)
+print(y_train)
+print(x_test)
+print(y_test)
+    
+#-------------------------------------------------------------------
+#tried this to understand how k can affect the score accuracy and selected k as 5
+'''for i in range(1, 25):
+    knn = KNeighborsClassifier(n_neighbors = i)
+    knn.fit(x_train, y_train)
+    y_predi = knn.predict(x_test)
+    print(metrics.accuracy_score(y_test, y_predi))
+    #print('Testing Accuracy:', str(knn.score(x_test, y_test)))
+    #print('Training Accuracy:', str(knn.score(x_train, y_train))) 
+'''
+
+knn = KNeighborsClassifier(n_neighbors = 5)
+knn.fit(x_train, y_train)
+y_predi = knn.predict(x_test)
+print(metrics.accuracy_score(y_test, y_predi))
+print('Testing Accuracy:', str(knn.score(x_test, y_test)))
+print('Training Accuracy:', str(knn.score(x_train, y_train)))
+
+x_new = [[5.1,3.8,1.9,0.4], [5,2.3,3.3,1], [5,3.4,1.6,0.4]]
+y_predi = knn.predict(x_new)
+print(y_predi[0])
+print(y_predi[1])
+print(y_predi[2])
+    
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Output:
+
+Python 3.7.2 (tags/v3.7.2:9a3ffc0492, Dec 23 2018, 22:20:52) [MSC v.1916 32 bit (Intel)] on win32
+Type "help", "copyright", "credits" or "license()" for more information.
+>>> 
+ RESTART: C:\Users\Sandesh\AppData\Local\Programs\Python\Python37-32\q1pandas.py 
+        name  score  attempts qualify
+a  Anastasia   12.5         1     yes
+b       Dima    9.0         3      no
+c  Katherine   16.5         2     yes
+d      James    NaN         3      no
+e      Emily    9.0         2      no
+f    Michael   20.0         3     yes
+g    Matthew   14.5         1     yes
+h      Laura    NaN         1      no
+i      Kevin    8.0         2      no
+j      Jonas   19.0         1     yes
+   attempts       name  qualify  score
+a         1  Anastasia     True   12.5
+b         3       Dima    False    9.0
+c         2  Katherine     True   16.5
+d         3      James    False    NaN
+e         2      Emily    False    9.0
+f         3    Michael     True   20.0
+g         1    Matthew     True   14.5
+h         1      Laura    False    NaN
+i         2      Kevin    False    8.0
+j         1      Jonas     True   19.0
+>>> 
+>>> 
+>>> # q2
+>>> 
+ RESTART: C:\Users\Sandesh\AppData\Local\Programs\Python\Python37-32\q2iris-dataset.py 
+
+(150, 6)
+Id                 int64
+SepalLengthCm    float64
+SepalWidthCm     float64
+PetalLengthCm    float64
+PetalWidthCm     float64
+Species           object
+dtype: object
+    Id  SepalLengthCm  SepalWidthCm  PetalLengthCm  PetalWidthCm      Species
+0    1            5.1           3.5            1.4           0.2  Iris-setosa
+1    2            4.9           3.0            1.4           0.2  Iris-setosa
+2    3            4.7           3.2            1.3           0.2  Iris-setosa
+3    4            4.6           3.1            1.5           0.2  Iris-setosa
+4    5            5.0           3.6            1.4           0.2  Iris-setosa
+5    6            5.4           3.9            1.7           0.4  Iris-setosa
+6    7            4.6           3.4            1.4           0.3  Iris-setosa
+7    8            5.0           3.4            1.5           0.2  Iris-setosa
+8    9            4.4           2.9            1.4           0.2  Iris-setosa
+9   10            4.9           3.1            1.5           0.1  Iris-setosa
+10  11            5.4           3.7            1.5           0.2  Iris-setosa
+11  12            4.8           3.4            1.6           0.2  Iris-setosa
+12  13            4.8           3.0            1.4           0.1  Iris-setosa
+13  14            4.3           3.0            1.1           0.1  Iris-setosa
+14  15            5.8           4.0            1.2           0.2  Iris-setosa
+15  16            5.7           4.4            1.5           0.4  Iris-setosa
+16  17            5.4           3.9            1.3           0.4  Iris-setosa
+17  18            5.1           3.5            1.4           0.3  Iris-setosa
+18  19            5.7           3.8            1.7           0.3  Iris-setosa
+19  20            5.1           3.8            1.5           0.3  Iris-setosa
+0
+
+['Iris-virginica' 'Iris-versicolor' 'Iris-setosa' 'Iris-virginica'
+ 'Iris-virginica' 'Iris-versicolor' 'Iris-setosa' 'Iris-versicolor'
+ 'Iris-versicolor' 'Iris-versicolor' 'Iris-virginica' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-setosa' 'Iris-setosa' 'Iris-versicolor'
+ 'Iris-virginica' 'Iris-virginica' 'Iris-virginica' 'Iris-virginica'
+ 'Iris-versicolor' 'Iris-virginica' 'Iris-versicolor' 'Iris-versicolor'
+ 'Iris-virginica' 'Iris-virginica' 'Iris-virginica' 'Iris-virginica'
+ 'Iris-versicolor' 'Iris-virginica' 'Iris-versicolor' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-versicolor' 'Iris-versicolor' 'Iris-versicolor'
+ 'Iris-versicolor' 'Iris-virginica' 'Iris-setosa' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-versicolor' 'Iris-setosa' 'Iris-setosa'
+ 'Iris-versicolor' 'Iris-setosa' 'Iris-virginica' 'Iris-versicolor'
+ 'Iris-setosa' 'Iris-versicolor' 'Iris-virginica' 'Iris-versicolor'
+ 'Iris-setosa' 'Iris-virginica' 'Iris-virginica' 'Iris-virginica'
+ 'Iris-virginica' 'Iris-setosa' 'Iris-setosa' 'Iris-virginica'
+ 'Iris-virginica' 'Iris-setosa' 'Iris-virginica' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-virginica' 'Iris-setosa' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-setosa' 'Iris-setosa' 'Iris-setosa'
+ 'Iris-versicolor' 'Iris-virginica' 'Iris-virginica' 'Iris-setosa'
+ 'Iris-setosa' 'Iris-setosa' 'Iris-versicolor' 'Iris-versicolor'
+ 'Iris-setosa' 'Iris-setosa' 'Iris-versicolor' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-versicolor' 'Iris-virginica' 'Iris-versicolor'
+ 'Iris-setosa' 'Iris-virginica' 'Iris-setosa' 'Iris-virginica'
+ 'Iris-setosa' 'Iris-setosa' 'Iris-virginica' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-versicolor' 'Iris-versicolor' 'Iris-versicolor'
+ 'Iris-virginica' 'Iris-virginica' 'Iris-versicolor' 'Iris-versicolor'
+ 'Iris-setosa' 'Iris-versicolor' 'Iris-virginica' 'Iris-virginica'
+ 'Iris-setosa' 'Iris-versicolor' 'Iris-versicolor' 'Iris-versicolor'
+ 'Iris-versicolor' 'Iris-setosa' 'Iris-setosa' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-versicolor' 'Iris-virginica' 'Iris-setosa']
+[[5.8 2.8 5.1 2.4]
+ [6.  2.2 4.  1. ]
+ [5.5 4.2 1.4 0.2]
+ [7.3 2.9 6.3 1.8]
+ [5.  3.4 1.5 0.2]
+ [6.3 3.3 6.  2.5]
+ [5.  3.5 1.3 0.3]
+ [6.7 3.1 4.7 1.5]
+ [6.8 2.8 4.8 1.4]
+ [6.1 2.8 4.  1.3]
+ [6.1 2.6 5.6 1.4]
+ [6.4 3.2 4.5 1.5]
+ [6.1 2.8 4.7 1.2]
+ [6.5 2.8 4.6 1.5]
+ [6.1 2.9 4.7 1.4]
+ [4.9 3.1 1.5 0.1]
+ [6.  2.9 4.5 1.5]
+ [5.5 2.6 4.4 1.2]
+ [4.8 3.  1.4 0.3]
+ [5.4 3.9 1.3 0.4]
+ [5.6 2.8 4.9 2. ]
+ [5.6 3.  4.5 1.5]
+ [4.8 3.4 1.9 0.2]
+ [4.4 2.9 1.4 0.2]
+ [6.2 2.8 4.8 1.8]
+ [4.6 3.6 1.  0.2]
+ [5.1 3.8 1.9 0.4]
+ [6.2 2.9 4.3 1.3]
+ [5.  2.3 3.3 1. ]
+ [5.  3.4 1.6 0.4]]
+['Iris-virginica' 'Iris-versicolor' 'Iris-setosa' 'Iris-virginica'
+ 'Iris-setosa' 'Iris-virginica' 'Iris-setosa' 'Iris-versicolor'
+ 'Iris-versicolor' 'Iris-versicolor' 'Iris-virginica' 'Iris-versicolor'
+ 'Iris-versicolor' 'Iris-versicolor' 'Iris-versicolor' 'Iris-setosa'
+ 'Iris-versicolor' 'Iris-versicolor' 'Iris-setosa' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-versicolor' 'Iris-setosa' 'Iris-setosa'
+ 'Iris-virginica' 'Iris-setosa' 'Iris-setosa' 'Iris-versicolor'
+ 'Iris-versicolor' 'Iris-setosa']
+0.9666666666666667
+Testing Accuracy: 0.9666666666666667
+Training Accuracy: 0.95
+Iris-setosa
+Iris-versicolor
+Iris-setosa
+>>> 
+
+
